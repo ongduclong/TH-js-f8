@@ -1,5 +1,8 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
+
+const PLAYER_STORAGE_KEY = 'F8_PLAYER'
+
 const heading = $('header h2')
 const cdThumb = $('.cd-thumb')
 const audio = $('#audio')
@@ -10,12 +13,21 @@ const progress = $('#progress');
 const prevBtn = $('.btn-prev');
 const nextBtn = $('.btn-next');
 const randomBtn = $('.btn-random');
+const repeatBtn = $('.btn-repeat');
+const playlist = $('.playlist');
 
 
 const app = {
     currentIndex: 0,
     isPlaying: false,
-    isRandom: false,
+    isRandom: false,    
+    isRepeat: false,
+    config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
+    setConfig: function(key, value) {
+        this.config[key] = value;
+        localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(this.config))
+    },
+
     songs: [
        {
         name: 'Nevada',
@@ -53,7 +65,7 @@ const app = {
     //     path: './assets/music/song3.mp3',
     //     image: './assets/img/song1.jpg'
     //    }
-    {
+        {
         name: 'Nevada',
         singer: 'Vicetone',
         path: './assets/music/song1.mp3',
@@ -65,12 +77,23 @@ const app = {
         path: './assets/music/song2.mp3',
         image: './assets/img/song2.jpg'
        },
-
+       {
+        name: 'Nevada',
+        singer: 'Vicetone',
+        path: './assets/music/song1.mp3',
+        image: './assets/img/song1.jpg'
+       },
+       {
+        name: 'SummerTime',
+        singer: 'K-391',
+        path: './assets/music/song2.mp3',
+        image: './assets/img/song2.jpg'
+       },
     ],
     render: function() {
-        const htmls = this.songs.map(song => {
+        const htmls = this.songs.map((song, index) => {
             return `
-                <div class="song">
+                <div class="song ${index === this.currentIndex ? 'active' : ''}" data-index=${index}>
                     <div class="thumb" 
                         style="background-image: url('${song.image}')">
                     </div>
@@ -84,7 +107,7 @@ const app = {
                  </div>
             `
         })
-        $('.playlist').innerHTML = htmls.join('')
+        playlist.innerHTML = htmls.join('')
     },
     defineProperties : function() {
         Object.defineProperty(this, 'currentSong', {
@@ -97,13 +120,16 @@ const app = {
         const _this = this;
         const cdWidth = cd.offsetWidth;
         // xu ly CD quay va dung
-        const cdThumbAnimate = cdThumb.animate([
-            { transform: 'rotate(360deg'}
-        ],{
-            duration : 10000, // 10s
-            interation: Infinity,
-        })
+        const cdThumbAnimate = cdThumb.animate([{ transform: 'rotate(360deg'}],{
+            duration: 10000,
+            iterations: Infinity,
+        });
         cdThumbAnimate.pause();
+        // const cdThumbAnimate = cdThumb.animate([{ transform: "rotate(360deg)" }], {
+        //     duration: 10000, // 10s
+        //     iterations: Infinity,
+        //   });
+        //   cdThumbAnimate.pause();
 
         //phong to thu nho CD
         document.onscroll = function() {
@@ -153,9 +179,10 @@ const app = {
                 _this.playRandomSong()
             } else {
                 _this.nextSong()
-            }
-            
+            }           
             audio.play();
+            _this.render();
+            _this.scrollToActiveSong()
         }
         // khi prev song
         prevBtn.onclick = function() {
@@ -164,19 +191,61 @@ const app = {
             } else {
                 _this.prevSong()
             }
-            
             audio.play();
+            _this.render();
+            _this.scrollToActiveSong()
+
+
         }
         // khi random song
         randomBtn.onclick = function() {
             _this.isRandom = !_this.isRandom
+            _this.setConfig('isRandom',_this.isRandom)
             randomBtn.classList.toggle('active',_this.isRandom)
         }
+        // xu ly lap lai 1 song
+        repeatBtn.onclick = function() {
+            _this.isRepeat = !_this.isRepeat
+            _this.setConfig('isRepeat',_this.isRepeat)
+            repeatBtn.classList.toggle('active',_this.isRepeat)
+        }
+        // xu ly next song khi audio ended
+        audio.onended = function() {
+            if(_this.isRepeat) {
+                audio.play()
+            } else {
+                nextBtn.click();
+            }
+        }
+        // lang nghe click vao playlist
+        playlist.onclick = function(e) {
+            const songNode = e.target.closest('.song:not(.active')
+            if(songNode || e.target.closest('.option')) {
+                if(songNode) {
+                    _this.currentIndex = Number(songNode.dataset.index)
+                    _this.loadCurrentSong()
+                    _this.render()
+                    audio.play()
+                }
+            }
+        }
+    },
+    scrollToActiveSong: function() {
+        setTimeout(() => {
+            $('.song.active').scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+            })
+        }, 300)
     },
     loadCurrentSong: function() {      
         heading.textContent = this.currentSong.name
         cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`
         audio.src = this.currentSong.path      
+    },
+    loadConfig: function() {
+        this.isRandom = this.config.isRandom
+        this.isRepeat = this.config.isRepeat
     },
     nextSong: function() {
         this.currentIndex++;
@@ -201,6 +270,8 @@ const app = {
         this.loadCurrentSong()
     },
     start: function() {
+        // gan cau hinh tu config vao ung dung
+        this.loadConfig()
         // dinh nghia cac thuoc tinh cho object
         this.defineProperties()
         // lang nghe / xu ly cac su kien ( DOM event)
@@ -209,6 +280,10 @@ const app = {
         this.loadCurrentSong()
         // Render playlist
         this.render()
+        // hien thi trang thai ban dau cua button repeat va radom
+        randomBtn.classList.toggle('active',this.isRandom)
+        repeatBtn.classList.toggle('active',this.isRepeat)
+
     }
 }
 app.start()
