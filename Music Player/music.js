@@ -125,12 +125,7 @@ const app = {
             iterations: Infinity,
         });
         cdThumbAnimate.pause();
-        // const cdThumbAnimate = cdThumb.animate([{ transform: "rotate(360deg)" }], {
-        //     duration: 10000, // 10s
-        //     iterations: Infinity,
-        //   });
-        //   cdThumbAnimate.pause();
-
+                
         //phong to thu nho CD
         document.onscroll = function() {
             const scrollTop = window.scrollY || document.documentElement.scrollTop
