@@ -41,53 +41,30 @@ const app = {
         path: './assets/music/song2.mp3',
         image: './assets/img/song2.jpg'
        },
-    //    {
-    //     name: 'Move Your Body',
-    //     singer: 'Sia',
-    //     path: './assets/music/song3.mp3',
-    //     image: './assets/img/song3.jpg'
-    //    },
-    //    {
-    //     name: 'Alone',
-    //     singer: 'Alan Walker',
-    //     path: './assets/music/song3.mp3',
-    //     image: './assets/img/song1.jpg'
-    //    },
-    //    {
-    //     name: 'Monody',
-    //     singer: 'TheFatRat',
-    //     path: './assets/music/song3.mp3',
-    //     image: './assets/img/song1.jpg'
-    //    },
-    //    {
-    //     name: 'Monody',
-    //     singer: 'TheFatRat',
-    //     path: './assets/music/song3.mp3',
-    //     image: './assets/img/song1.jpg'
-    //    }
+  
         {
+        name: 'Gym class heroes',
+        singer: 'Stereo Hearts ft. Adam',
+        path: './assets/music/song3.mp3',
+        image: './assets/img/song3.jpg'
+       },
+       {
+        name: 'One more night',
+        singer: 'Maroon 5',
+        path: './assets/music/song4.mp3',
+        image: './assets/img/song4.jpg'
+       },
+       {
         name: 'Nevada',
         singer: 'Vicetone',
         path: './assets/music/song1.mp3',
         image: './assets/img/song1.jpg'
        },
        {
-        name: 'SummerTime',
-        singer: 'K-391',
-        path: './assets/music/song2.mp3',
-        image: './assets/img/song2.jpg'
-       },
-       {
-        name: 'Nevada',
-        singer: 'Vicetone',
-        path: './assets/music/song1.mp3',
-        image: './assets/img/song1.jpg'
-       },
-       {
-        name: 'SummerTime',
-        singer: 'K-391',
-        path: './assets/music/song2.mp3',
-        image: './assets/img/song2.jpg'
+        name: 'Rather Be × Without Me [Mashup]',
+        singer: 'Eminem ft. Clean Bandit',
+        path: './assets/music/song5.mp3',
+        image: './assets/img/song5.jpg'
        },
     ],
     render: function() {
