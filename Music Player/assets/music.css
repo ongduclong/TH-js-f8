@@ -165,7 +165,9 @@
     background-size: cover;
     margin: 0 8px;
   }
-  
+  .song .thumb image {
+    object-fit: ;
+  }
   .song .body {
     flex: 1;
     padding: 0 16px;
